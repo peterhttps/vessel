@@ -1,4 +1,5 @@
-from main import Vessel, VesselRouter
+from vessel.router import VesselRouter
+from vessel.vessel import Vessel
 
 
 if __name__ == '__main__':
@@ -6,10 +7,8 @@ if __name__ == '__main__':
   router = VesselRouter()
 
   router.get('/casa')
-  # router.get('/teste')
 
   server.attachRoutes(router)
 
-  # server.printRoutes()
   server.start()
 
