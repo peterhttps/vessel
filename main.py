@@ -1,5 +1,9 @@
+from enum import Enum
 import socket 
 import json 
+
+class ResponseMethods(Enum):
+  GET = 1
 
 class VesselRequest:
   def __init__(self, data):
@@ -15,7 +19,8 @@ class VesselRequest:
     requestLine = lines[0]
     words = requestLine.split(b" ")
 
-    self.method = words[0].decode()
+    if (words[0].decode() == "GET"):
+      self.method = ResponseMethods.GET
 
     if len(words) > 1:
       self.uri = words[1].decode()
@@ -63,15 +68,40 @@ class VesselTCP:
   def handleRequest(self, data):
     return data
 
+class VesselRouter:
+  def __init__(self):
+    self.routes = []
+
+  def get(self, path, function=None):
+    routeType = {
+      "method": ResponseMethods.GET,
+      "path": path,
+      "function": function
+    }
+
+    self.routes.append(routeType)
+
 class Vessel(VesselTCP):
+  def __init__(self):
+    super().__init__()
+    self.routes = []
+
+  def attachRoutes(self, routesObject: VesselRouter):
+    self.routes = routesObject.routes
+
+  def printRoutes(self):
+    print(self.routes)
+
   def handleRequest(self, data):
 
     request = VesselRequest(data)
-    handler = getattr(self, 'handle_%s' % request.method)
+    print(request.uri, request.method)
+    for route in self.routes:
+      if (request.uri == route["path"] and request.method == route["method"]):
+        response = self.handle_GET(request)
+        # response = handler(request)
 
-    response = handler(request)
-
-    return response
+        return response
 
   def handle_GET(self, request):
 
@@ -91,15 +121,13 @@ class Vessel(VesselTCP):
     return b"".join([responseLine, headers, blankLine, responseBody])
 
   def response_line(self, status_code):
-      """Returns response line"""
       reason = self.status_codes[status_code]
       line = "HTTP/1.1 %s %s\r\n" % (status_code, reason)
 
-      return line.encode() # call encode to convert str to bytes
+      return line.encode() 
 
   def response_headers(self, extra_headers=None):
-      headers_copy = self.headers.copy() # make a local copy of headers
-
+      headers_copy = self.headers.copy() 
       if extra_headers:
           headers_copy.update(extra_headers)
 
@@ -108,11 +136,10 @@ class Vessel(VesselTCP):
       for h in headers_copy:
           headers += "%s: %s\r\n" % (h, headers_copy[h])
 
-      return headers.encode() # call encode to convert str to bytes
-
-class VesselRouter(VesselTCP):
+      return headers.encode() 
 
 
-if __name__ == '__main__':
-  server = Vessel()
-  server.start()
+
+# if __name__ == '__main__':
+#   server = Vessel()
+#   server.start()
