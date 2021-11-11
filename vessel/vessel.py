@@ -7,7 +7,7 @@ from vessel.router import VesselRouter
 class Vessel(vesselTCP.VesselTCP):
   def __init__(self):
     super().__init__()
-    self.routes = []
+    self.routes: list[VesselRequest] = []
 
   def attachRoutes(self, routesObject: VesselRouter):
     self.routes = routesObject.routes
@@ -18,16 +18,21 @@ class Vessel(vesselTCP.VesselTCP):
   def handleRequest(self, data):
 
     request = VesselRequest(data)
-    print(request.uri, request.method)
+    print(request.path, request.method)
     for route in self.routes:
-      if (request.uri == route["path"] and request.method == route["method"]):
-        response = self.handle_GET(request)
+      if (request.path == route.path and request.method == route.method):
+        response = self.handle_GET(route)
         # response = handler(request)
 
         return response
 
-  def handle_GET(self, request):
+    response = self.handle_GET(request)
+    
+    return response
 
+  def handle_GET(self, request):
+    if (request.function() != None):
+      request.function()
     responseLine = b"HTTP/1.1 200 OK\r\n"
     headers = self.response_headers()
 
