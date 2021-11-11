@@ -1,9 +1,17 @@
+from vessel.response import VesselResponse
 from vessel.router import VesselRouter
 
 router = VesselRouter()
 
-def testPrint():
-  print("HIII REQUEST")
+def testPrint(response: VesselResponse):
+  resp = {
+    "id": 1999,
+    "name": "John",
+    "age": 28
+  }
+
+  response.status(200)
+  response.json(resp)
 
 router.get('/casa', testPrint)
 

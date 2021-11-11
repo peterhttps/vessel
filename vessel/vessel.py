@@ -1,6 +1,7 @@
 import json
 from vessel import vesselTCP
 from vessel.request import VesselRequest
+from vessel.response import VesselResponse
 from vessel.router import VesselRouter 
 
 
@@ -12,13 +13,10 @@ class Vessel(vesselTCP.VesselTCP):
   def attachRoutes(self, routesObject: VesselRouter):
     self.routes = routesObject.routes
 
-  def printRoutes(self):
-    print(self.routes)
-
   def handleRequest(self, data):
 
     request = VesselRequest(data)
-    print(request.path, request.method)
+
     for route in self.routes:
       if (request.path == route.path and request.method == route.method):
         response = self.handle_GET(route)
@@ -31,18 +29,18 @@ class Vessel(vesselTCP.VesselTCP):
     return response
 
   def handle_GET(self, request):
-    if (request.function() != None):
-      request.function()
-    responseLine = b"HTTP/1.1 200 OK\r\n"
+    
+    response = VesselResponse()
+
+    if (request.function != None):
+      request.function(response)
+    responseLine = "HTTP/1.1 %s OK\r\n" % (response.statusCode)
+    responseLine = responseLine.encode()
     headers = self.response_headers()
 
     blankLine = b"\r\n"
 
-    testResponse = {
-      "id": 20,
-      "name": "John",
-      "country": "UK"
-    }
+    testResponse = response.responseBody
 
     responseBody = json.dumps(testResponse, indent=2).encode(encoding = 'UTF-8')
 
