@@ -24,9 +24,9 @@ class Vessel(vesselTCP.VesselTCP):
 
         return response
 
-    response = self.handle_GET(request)
+    response = VesselResponse(statusCode=501)
     
-    return response
+    return self.handle_GET(response)
 
   def handle_GET(self, request):
     

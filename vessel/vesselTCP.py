@@ -2,7 +2,6 @@ import socket
 
 class VesselTCP:
   headers = {
-        'Server': 'VesselServer',
         'Content-Type': 'application/json',
   }
 

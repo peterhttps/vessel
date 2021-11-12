@@ -10,8 +10,7 @@ def testPrint(response: VesselResponse):
     "age": 28
   }
 
-  response.status(200)
-  response.json(resp)
+  response.status(200).json(resp)
 
 router.get('/casa', testPrint)
 
