@@ -2,12 +2,13 @@ from vessel.constants.requestMethods import ResponseMethods
 
 
 class VesselRequest:
-  def __init__(self, data=None, method=None, path=None, function=None):
+  def __init__(self, data=None, method=None, path=None, function=None, isImplemented=True):
     self.method = method
     self.path = path
     self.httpVersion = "1.1"
     self.function = function
     self.headers = {}
+    self.isImplemented = isImplemented
 
     if (data != None):
       self.parse(data)
@@ -31,8 +32,7 @@ class VesselRequest:
       headersTemp = lines[1:]
       for headerString in headersTemp:
         headerKeyValue = headerString.decode().split(":", 1)
-        #print(headerKeyValue)
+
         if (headerKeyValue[0] != ''):
           self.headers[headerKeyValue[0]] = headerKeyValue[1]
 
-      print(self.headers)
