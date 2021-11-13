@@ -9,3 +9,8 @@ class VesselRouter:
     request = VesselRequest(method=ResponseMethods.GET, path=path, function=function)
 
     self.routes.append(request)
+
+  def post(self, path, function=None):
+    request = VesselRequest(method=ResponseMethods.POST, path=path, function=function)
+
+    self.routes.append(request)
