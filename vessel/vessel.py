@@ -19,6 +19,7 @@ class Vessel(vesselTCP.VesselTCP):
 
     for route in self.routes:
       if (request.path == route.path and request.method == route.method):
+        route.headers = request.headers
         response = self.handle_GET(route)
         # response = handler(request)
 
@@ -28,12 +29,12 @@ class Vessel(vesselTCP.VesselTCP):
     
     return self.handle_GET(response)
 
-  def handle_GET(self, request):
+  def handle_GET(self, request: VesselRequest):
     
     response = VesselResponse()
 
     if (request.function != None):
-      request.function(response)
+      request.function(request, response)
     responseLine = "HTTP/1.1 %s OK\r\n" % (response.statusCode)
     responseLine = responseLine.encode()
     headers = self.response_headers()

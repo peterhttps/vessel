@@ -7,6 +7,7 @@ class VesselRequest:
     self.path = path
     self.httpVersion = "1.1"
     self.function = function
+    self.headers = {}
 
     if (data != None):
       self.parse(data)
@@ -25,3 +26,13 @@ class VesselRequest:
 
     if len(words) > 2:
       self.http_version = words[2]
+
+    if (len(lines) > 1):
+      headersTemp = lines[1:]
+      for headerString in headersTemp:
+        headerKeyValue = headerString.decode().split(":", 1)
+        #print(headerKeyValue)
+        if (headerKeyValue[0] != ''):
+          self.headers[headerKeyValue[0]] = headerKeyValue[1]
+
+      print(self.headers)
