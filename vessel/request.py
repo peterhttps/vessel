@@ -37,8 +37,9 @@ class VesselRequest:
         if (headerKeyValue[0] != ''):
           self.headers[headerKeyValue[0]] = headerKeyValue[1]
 
-      pieces = data.decode().split('\r\n\r\n')
+      if (words[0].decode() != "GET"):
+        pieces = data.decode().split('\r\n\r\n')
 
-      body = '\r\n\r\n'.join(pieces[1:])
-      
-      self.body = literal_eval(body)
+        body = '\r\n\r\n'.join(pieces[1:])
+        
+        self.body = literal_eval(body)
