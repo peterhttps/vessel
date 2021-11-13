@@ -1,5 +1,5 @@
 from vessel.constants.requestMethods import ResponseMethods
-
+from ast import literal_eval
 
 class VesselRequest:
   def __init__(self, data=None, method=None, path=None, function=None, isImplemented=True):
@@ -8,6 +8,7 @@ class VesselRequest:
     self.httpVersion = "1.1"
     self.function = function
     self.headers = {}
+    self.body = {}
     self.isImplemented = isImplemented
 
     if (data != None):
@@ -36,3 +37,8 @@ class VesselRequest:
         if (headerKeyValue[0] != ''):
           self.headers[headerKeyValue[0]] = headerKeyValue[1]
 
+      pieces = data.decode().split('\r\n\r\n')
+
+      body = '\r\n\r\n'.join(pieces[1:])
+      
+      self.body = literal_eval(body)
