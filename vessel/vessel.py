@@ -41,8 +41,7 @@ class Vessel(vesselTCP.VesselTCP):
     if (request.function != None):
       request.function(req=request, res=response)
 
-    responseLine = "HTTP/1.1 %s OK\r\n" % (response.statusCode)
-    responseLine = responseLine.encode()
+    responseLine = self.response_line(response.statusCode)
 
     headers = self.response_headers()
 
@@ -55,7 +54,7 @@ class Vessel(vesselTCP.VesselTCP):
     return b"".join([responseLine, headers, blankLine, responseBody])
 
   def response_line(self, status_code):
-      reason = self.status_codes[status_code]
+      reason = self.status_codes[str(status_code)]
       line = "HTTP/1.1 %s %s\r\n" % (status_code, reason)
 
       return line.encode() 

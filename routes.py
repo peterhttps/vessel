@@ -11,7 +11,7 @@ def testPrint(req: VesselRequest, res: VesselResponse):
     "age": 28
   }
 
-  res.status(200).json(resp)
+  res.status(401).json(resp)
 
 def testPost(req: VesselRequest, res: VesselResponse):
   resp = {
@@ -20,7 +20,7 @@ def testPost(req: VesselRequest, res: VesselResponse):
     "age": 35
   }
 
-  res.status(200).json(resp)
+  res.status(502).json(resp)
 
 
 router.get('/casa', testPrint)

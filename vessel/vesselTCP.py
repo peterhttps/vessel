@@ -1,14 +1,13 @@
 import socket 
+import json
 
 class VesselTCP:
   headers = {
         'Content-Type': 'application/json',
   }
 
-  status_codes = {
-        200: 'OK',
-        404: 'Not Found',
-  }
+  jsonFile = open('vessel/constants/statusCodes.json',)
+  status_codes = json.load(jsonFile)
 
   def __init__(self, host='127.0.0.1', port=8888):
     self.host = host
