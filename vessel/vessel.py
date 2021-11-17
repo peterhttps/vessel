@@ -10,6 +10,7 @@ class Vessel(vesselTCP.VesselTCP):
   def __init__(self):
     super().__init__()
     self.routes: list[VesselRequest] = []
+    self.cors = []
 
   def attachRoutes(self, routesObject: VesselRouter):
     self.routes = routesObject.routes
