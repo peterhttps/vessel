@@ -1,5 +1,6 @@
 from vessel.constants.requestMethods import ResponseMethods
 from ast import literal_eval
+from http_parser.pyparser import HttpParser
 
 class VesselRequest:
   def __init__(self, data=None, method=None, path=None, function=None, isImplemented=True):
@@ -15,6 +16,16 @@ class VesselRequest:
       self.parse(data)
 
   def parse(self, data):
+    p = HttpParser()
+    nparsed = p.execute(data, len(data))
+
+    assert nparsed == len(data)
+
+    if p.is_headers_complete():
+      print(p.get_headers())
+      for key, value in p.get_headers().items():
+        self.headers[key] = value
+
     lines = data.split(b"\r\n")
 
     requestLine = lines[0]
@@ -30,18 +41,10 @@ class VesselRequest:
 
     if len(words) > 2:
       self.http_version = words[2]
+               
+    if (words[0].decode() != "GET"):
+      pieces = data.decode().split('\r\n\r\n')
 
-    if (len(lines) > 1):
-      headersTemp = lines[1:]
-      for headerString in headersTemp:
-        headerKeyValue = headerString.decode().split(":", 1)
-
-        if (headerKeyValue[0] != ''):
-          self.headers[headerKeyValue[0]] = headerKeyValue[1]
-
-      if (words[0].decode() != "GET"):
-        pieces = data.decode().split('\r\n\r\n')
-
-        body = '\r\n\r\n'.join(pieces[1:])
+      body = '\r\n\r\n'.join(pieces[1:])
         
-        self.body = literal_eval(body)
+      self.body = literal_eval(body)
