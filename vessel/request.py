@@ -35,6 +35,8 @@ class VesselRequest:
       self.method = ResponseMethods.GET
     elif (words[0].decode() == "POST"):
       self.method = ResponseMethods.POST
+    elif (words[0].decode() == "PUT"):
+      self.method = ResponseMethods.PUT
 
     if len(words) > 1:
       self.path = words[1].decode()
