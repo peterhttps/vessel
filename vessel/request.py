@@ -39,6 +39,8 @@ class VesselRequest:
       self.method = ResponseMethods.PUT
     elif (words[0].decode() == "DELETE"):
       self.method = ResponseMethods.DELETE
+    elif (words[0].decode() == "PATCH"):
+      self.method = ResponseMethods.PATCH
 
     if len(words) > 1:
       self.path = words[1].decode()
